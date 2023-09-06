@@ -1,6 +1,6 @@
 
 user with jwt token
-product CRUD
++ product CRUD
 order
 rating, comment - review, 
 fake chat ?
