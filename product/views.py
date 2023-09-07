@@ -1,13 +1,13 @@
 from rest_framework import viewsets
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 
 
 class PermissionMixin:
     def get_permissions(self):
         if self.action in ('update', 'partial_update', 'destroy', 'create'):
-            permissions = [IsAdminUser]
+            permissions = [IsAuthenticated]
         else:
             permissions = [AllowAny]
         return [permission() for permission in permissions]

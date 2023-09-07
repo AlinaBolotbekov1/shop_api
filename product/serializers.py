@@ -1,5 +1,9 @@
 from rest_framework.serializers import  ModelSerializer, ValidationError
 from .models import Category, Product
+from review.serializers import CommentSerializer
+from review.models import Comment
+from django.db.models import Avg
+
 
 class CategorySerializer(ModelSerializer):
 
@@ -22,3 +26,10 @@ class ProductSerializer(ModelSerializer):
                 'Стоимость не может быть 0 или меньше'
             )
         return price 
+    
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['rating'] = instance.ratings.aggregate(Avg('rating'))['rating__avg']
+        representation['comments'] = CommentSerializer(Comment.objects.filter(product=instance.pk), many=True).data
+        return representation
