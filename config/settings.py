@@ -15,6 +15,7 @@ from decouple import config
 import os
 from datetime import timedelta
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,11 +50,13 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'django_filters',
+    'corsheaders',
 
     #apps
     'product',
     'account',
     'review',
+    'order',
 
 
 ]
@@ -61,6 +64,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -152,6 +156,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 4,
     'DEFAULT_AUTHENTICATION_CLASSES': [
     
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -172,3 +179,68 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=40),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+
+
+
+LOGGING = {
+    "version" : 1,
+    "disable_existing_loggers" : False,
+    "formatters" : {
+        "main_format" : {
+            "format" : "{levelname} -> {asctime} -> {module} -> {filename} -> {message}",
+            "style" : "{",
+        },
+        "simple" : {
+            "format" : "{levelname} -> {message}",
+            "style" : "{",
+        },
+    },
+    "handlers" : {
+        "console" : {
+            "class" : "logging.StreamHandler",
+            "formatter" : "simple",
+        },
+        "file" : {
+            "class" : "logging.FileHandler",
+            "formatter" : "main_format",
+            "filename" : "debug.log",
+        },
+    },
+    "loggers" : {
+        "django" : {
+            "handlers" : ["console"],
+            "propagate" : True,
+        },
+        "django.request": {
+            "handlers" : ["file"],
+            "level" : "ERROR",
+            "propagate" : True,
+        },
+    },
+}
+
+
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8000', 'http://127.0.0.1:3000', 'https://domain.com...']
+
+CORS_ALLOWED_METHODS = ['POST', 'GET', 'PUT', 'PATCH', '...']

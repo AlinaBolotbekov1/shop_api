@@ -1,20 +1,25 @@
 
 + user with jwt token
 + product CRUD
-order
-rating, comment - review, 
-fake chat ?
-swagger
-permissions
-celery
++ rating, comment - review, 
++ swagger
++ permissions
++ media
++ favorits, dislike дз
++ pagination, filter, search дз
++ celery -> sudo apt install redis (добавить requirements.txt redis, celery)
++ карусель
++ cache
++ log
++ order
++ cors
++ admin
+
 deploy
 test
-cache
-log
-cors
-pagination, filter, search
-media
-favorits
-admin
+fake chat ?
 
-карусель
+
+
+
+
